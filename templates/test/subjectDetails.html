@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'testApp:userStat' %}">{{ user.username }}</a>
+                <a href="{% url 'logauth:logaut' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'logauth:log' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="margin-bottom: 40px;margin-top: 40px"> {{pageTitle}}
+                {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addTest' subject.id %}" style="font-weight: 900">+</a> {%endif%}
+                <hr>
+            </h2>
+            <table class="table table-bordered table-striped text-center">
+                <tr>
+                    <th class="col-9">Название теста</th>
+                    <th class="col-3">Кол-во вопросов</th>
+                </tr>
+                {% if tests %}
+                    {% for test in tests %}
+                    <tr>
+                        <td class="col-9">
+                            <a href="{% url 'testApp:detailsTest' subject.id test.id%}"> {{ test.name }} {% if user.is_staff %} <a class="btn btn-danger" style="margin-top:10px; margin-right:5px;" href="{% url 'testApp:deleteTest' subject.id test.id %}" style="font-weight: 900">x</a>
+                            <a class="btn btn-warning" style="margin-top:10px; margin-right:20px;" href="{% url 'testApp:changeTest' subject.id test.id %}" style="font-weight: 900">o</a>  {%endif%} </a>
+                        </td>
+                        <td class="col-3">
+                            {{test.questions_num}}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
+            </table> 
+            {% comment %} {% if subjects %}
+                <h2 style="margin-bottom: 40px;"> {{ pageTitle}} 
+                    {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addSubject' %}" style="font-weight: 900">+</a> {%endif%} 
+                    <hr>
+                </h2>
+                {% for subject in subjects %}
+                    <a href="{{subject.name}}" class="btn btn-outline-primary" style="margin-right:20px; min-width: 200px; margin-bottom: 10px;"> {{subject.name}} </a>
+                {%endfor%}
+            {% endif %} {% endcomment %}
+        </div>
+    </div>
+</div>
+{% endblock %}

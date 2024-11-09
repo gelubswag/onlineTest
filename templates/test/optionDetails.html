@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href="{% url 'testApp:userStat' %}">{{ user.username }}</a>
+                <a href="{% url 'logauth:logaut' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'logauth:log' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="margin-bottom: 40px;margin-top: 40px"> {{pageTitle}}
+                {% comment %} {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addTest' subject.id %}" style="font-weight: 900">+</a> {%endif%} {% endcomment %}
+                <hr>
+            </h2>
+            <div class="row">
+                <div class="col-12">
+                {% for i, quest in questions %}
+                    <a class="btn btn-outline-primary" href="{% url "testApp:detailsQuest" subject.id test.id quest.id %}" style="margin-bottom:10px"> {{ i|add:1}} </a>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.is_staff %}
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for opt in optinstnace %}
+            <div class="card text-center" style="padding: 10px; max-width: 40%; margin: 20px auto">
+                <label for="image{{opt.id}}"> Изображение </label>
+                
+                {% if opt.image %}
+                            <img src="{{ opt.image.url }}" alt="question image" style="max-width:300px; max-height: 300px">
+                {% endif %}
+                <input type="file" name="image{{opt.id}}" accept="image/*" id="id_image{{opt.id}}" {% if opt.image %} value="media{{opt.image.url}}" {% endif %}>
+                <label for="text{{opt.id}}"> Текст варианта ответа </label>
+                <input type="text" name="text{{opt.id}}" id="id_text{{opt.id}}" value="{{opt.text}}">
+                <label for="isRight{{opt.id}}"> Является верным? </label>
+                <input type="checkbox" name="isRight{{opt.id}}" id="id_isRight{{opt.id}}" {% if opt.isRight %} checked {% endif %}>
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}
