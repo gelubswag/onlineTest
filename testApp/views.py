@@ -178,7 +178,6 @@ def detailsQuest(request, subId, testId, questId):
             return redirect("logauth:log")
         
         test = SubjTest.objects.filter(id=testId).all()[0]
-        usertest = UserTest.objects.filter(isFinished=False,user=request.user,test=test).all()[0]
         question = Question.objects.filter(id=questId).all()[0]
         context = {
             "pageTitle" : test.name,
@@ -190,9 +189,11 @@ def detailsQuest(request, subId, testId, questId):
             "userAnswers": UserAnswer.objects.filter(quest=questId),
             "options": Option.objects.filter(quest=questId),
             "right_num": len(Option.objects.filter(quest=questId,isRight=True)),
-            "user_ans_opts": [i.opt.id for i in UserAnswer.objects.filter(quest=questId,answer=True,test=usertest)],
         }
-        print(context["user_ans_opts"])
+        if not(request.user.is_staff):
+            usertest = UserTest.objects.filter(isFinished=False,user=request.user,test=test).all()[0]
+            context["user_ans_opts"] = [i.opt.id for i in UserAnswer.objects.filter(quest=questId,answer=True,test=usertest)]
+            
         if UserAnswer.objects.filter(quest=questId):
             for i in UserAnswer.objects.filter(quest=questId):
                 if i.answer:
