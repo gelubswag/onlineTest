@@ -348,12 +348,7 @@ def finishTest(request,testId):
         'percentage': round(test.points/max_score * 100,2)
     }
     return render(request, "test/finishTest.html",context)
-"""http
-radio
-вопрос со строке
 
-3 правильных только 2
-"""
 @decorators.login_required
 def user_stat(request):
     if not request.user.is_staff:
