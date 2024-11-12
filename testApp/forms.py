@@ -17,7 +17,7 @@ class QuesttForm(ModelForm):
     
     class Meta:
         model = models.Question
-        fields = ["image","text","optionsNum","weight"]
+        fields = ["image","imageURL","text","optionsNum","weight"]
         widgets = {'vision': Textarea(attrs={'rows':6,
                                             'cols':22,
                                             'style':'resize:none',
@@ -28,4 +28,4 @@ class OptForm(ModelForm):
     
     class Meta:
         model = models.Option
-        fields = ["image","text","isRight"]
+        fields = ["image","imageURL","text","isRight"]

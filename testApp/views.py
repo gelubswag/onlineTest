@@ -209,6 +209,7 @@ def detailsQuest(request, subId, testId, questId):
             question.text = request.POST["text"]
             question.optionsNum = request.POST["optionsNum"]
             question.weight = request.POST["weight"]
+            question.imageURL = request.POST["imageURL"]
             opts = Option.objects.filter(quest=question).all()
             if len(opts) > int(question.optionsNum):
                 Option.objects.filter().delete()
@@ -246,6 +247,7 @@ def changeQuest(request, subId, testId, questId):
     question.text = request.POST["text"]
     question.optionsNum = request.POST["optionsNum"]
     question.weight = request.POST["weight"]
+    question.imageURL = request.POST["imageURL"]
     options = Option.objects.filter(quest=question).all()
     if len(opts) > question.optionsNum:
         Option.objects.filter().delete()
@@ -296,6 +298,7 @@ def changeOpts(request, subId, testId, questId):
             image = request.FILES.get(f"image{i}")
             text = request.POST.get(f'text{i}')
             isRight = request.POST.get(f'isRight{i}')
+            imageURL = request.POST.get(f'imageURL{i}')
             if isRight: isRight = True
             else: isRight = False
             
@@ -303,6 +306,7 @@ def changeOpts(request, subId, testId, questId):
             if image: opt.image = image
             opt.text = text
             opt.isRight = isRight
+            opt.imageURL = imageURL
             opt.save()
         test = SubjTest.objects.filter(id=testId).all()[0]
         question = Question.objects.filter(id=questId).all()[0]
@@ -344,7 +348,12 @@ def finishTest(request,testId):
         'percentage': round(test.points/max_score * 100,2)
     }
     return render(request, "test/finishTest.html",context)
+"""http
+radio
+вопрос со строке
 
+3 правильных только 2
+"""
 @decorators.login_required
 def user_stat(request):
     if not request.user.is_staff:

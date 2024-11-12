@@ -20,6 +20,7 @@ class SubjTest(models.Model):
 class Question(models.Model):
     test = models.ForeignKey(SubjTest, verbose_name="Тест", on_delete=models.CASCADE)
     image = models.ImageField(verbose_name="Изображение", blank=True, null=True,upload_to="media/")
+    imageURL = models.URLField(verbose_name="Ссылка на изображение", blank=True, null=True, default='')
     text = models.TextField(verbose_name="Вопрос", max_length=5048, default="")
     weight = models.IntegerField(verbose_name="Вес вопроса", validators=[MinValueValidator(1)], default=1)
     optionsNum =  models.IntegerField(verbose_name="Количество вариантов ответа", validators=[MinValueValidator(1)], default=1)
@@ -30,10 +31,11 @@ class Option(models.Model):
     quest = models.ForeignKey(Question, verbose_name="Вопрос", on_delete=models.CASCADE,null=True, blank=True)
     text = models.TextField(verbose_name="Текст", max_length=5048, default="")
     image = models.ImageField(verbose_name="Изображение", blank=True,upload_to="media/", null=True)
+    imageURL = models.URLField(verbose_name="Ссылка на изображение", blank=True, null=True, default='')
     isRight = models.BooleanField(verbose_name="Верный ответ?", default=False, blank=True)
     
     def __str__(self):
-        return str(self.quest) + "> " + self.text + ["| Без иозображения", "| С изображениеи"][bool(self.image)] + "> " + ["Wrong","Right"][self.isRight]
+        return str(self.quest) + "> " + self.text + ["| Без иозображения", "| С изображениеи"][bool(bool(self.image) + bool(self.imageURL))] + "> " + ["Wrong","Right"][self.isRight]
     
     
 class UserTest(models.Model):
