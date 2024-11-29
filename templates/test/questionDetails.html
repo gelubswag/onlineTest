@@ -30,6 +30,7 @@
                 {% comment %} {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addTest' subject.id %}" style="font-weight: 900">+</a> {%endif%} {% endcomment %}
                 <hr>
             </h2>
+            {%if user.is_staff%}
             <div class="row">
                 <div class="col-12">
                 {% for i, quest in questions %}
@@ -37,6 +38,7 @@
                 {% endfor %}
                 </div>
             </div>
+            {%endif%}
             <hr>
             <div class="row">
                 <div class="col-12 text-center">
@@ -81,9 +83,13 @@
                             {{ option.text }} <br>
                         </div>
                         {% endfor %}
-                    <button type="submit" class="btn btn-success" style="margin-top:10px">Сохранить ответ </button>
+                    {% if not is_last%}
+                    <button type="submit" class="btn btn-success" style="margin-top:10px">Следующий вопрос</button>
                     </form>
+                    {%endif%}
+                    {%if is_last%}
                     <a href="{% url 'testApp:finishTest' test.id %}" class="btn btn-danger" style="margin-top:10px"> Завершить тест</a>
+                    {%endif%}
                     {%endif%}
                 </div>
             </div>

@@ -30,12 +30,14 @@
                 {% comment %} {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addTest' subject.id %}" style="font-weight: 900">+</a> {%endif%} {% endcomment %}
                 <hr>
             </h2>
+            {% if user.is_staff%}
             <div class="row">
                 <div class="col-12">
                 {% for i, quest in questions %}
                     <a class="btn btn-outline-primary" href="{% url "testApp:detailsQuest" subject.id test.id quest.id %}" style="margin-bottom:10px"> {{ i|add:1}} </a>
                 {% endfor %}
                 </div>
+            {%endif%}
             </div>
             {% comment %} {% if subjects %}
                 <h2 style="margin-bottom: 40px;"> {{ pageTitle}} 
