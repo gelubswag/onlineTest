@@ -101,7 +101,7 @@ def addTest(request, subId):
             subj=subj,
             name=request.POST["name"],
             questions_num=request.POST["questions_num"],
-            test_questions_num = request.POST["test_questions_num"]
+            test_questions_num=request.POST["test_questions_num"],
         )
         test.save()
         return redirect("testApp:detailsSubject", subId=subId)
