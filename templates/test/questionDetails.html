@@ -38,8 +38,8 @@
                 {% endfor %}
                 </div>
             </div>
-            {%endif%}
             <hr>
+            {%endif%}
             <div class="row">
                 <div class="col-12 text-center">
                     {% if user.is_staff %}
@@ -55,6 +55,7 @@
                             <button type="submit" class="btn btn-success">Перейти к вариантам ответа</button>
                         </form>
                     {% else %}
+                    <div class='card carditem' style="margin: 0 auto; margin-top:10px; display:block; max-width: 80%; padding: 10px; box-sizing:content-box">
                     {% if question.image %}
                         <img src="{{ question.image.url }}" alt="question image" style="max-width:300px; max-height: 300px">
                     {% endif %}
@@ -67,9 +68,13 @@
                             {% else %} Выберите<strong> НЕСКОЛЬКО </strong> вариантов ответа:
                             {%endif%}
                         </p>
-                    {% else %}
+                    {%else%}
+                    <p>Выберите<strong> НЕСКОЛЬКО </strong> вариантов ответа:</p>
+                    {% endif %}
+                    {% if options|length == 0 %}
                         <p> Нет вариантов ответа</p>
                     {% endif %}
+                    </div>
                     {% csrf_token %}
                     <form method="POST" style="box-sizing:border-box" style="min-height: 20%">
                         {% csrf_token %}
@@ -85,10 +90,11 @@
                         {% endfor %}
                     {% if not is_last%}
                     <button type="submit" class="btn btn-success" style="margin-top:10px">Следующий вопрос</button>
-                    </form>
+                    
                     {%endif%}
                     {%if is_last%}
-                    <a href="{% url 'testApp:finishTest' test.id %}" class="btn btn-danger" style="margin-top:10px"> Завершить тест</a>
+                    <button name="last" class="btn btn-danger" style="margin-top:10px"> Завершить тест</button>
+                </form>
                     {%endif%}
                     {%endif%}
                 </div>

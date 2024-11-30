@@ -1,36 +1,32 @@
-{% extends 'base.html' %}
-
-{% block content %}
-{% if user.is_authenticated %}
+{% extends 'base.html' %} {% block content %} {% if user.is_authenticated %}
 <div class="container">
-    <div class="row" style="justify-content:flex-end">
-        <div class="col-3">
-            <div class="alert alert-info" >
-                <a href ="{% url 'testApp:userStat' %}">{{ user.username }}</a>
-                <a href="{% url 'logauth:logaut' %}">Logout</a>
-            </div>
-        </div>
+  <div class="row" style="justify-content: flex-end">
+    <div class="col-3">
+      <div class="alert alert-info">
+        <a href="{% url 'testApp:userStat' %}">{{ user.username }}</a>
+        <a href="{% url 'logauth:logaut' %}">Logout</a>
+      </div>
     </div>
+  </div>
 </div>
 {% else %}
 <div class="container">
-    <div class="row" style="justify-content:flex-end">
-        <div class="col-3">
-            <div class="alert alert-info" >
-                <a href ="{% url 'logauth:log' %}">Login</a>
-            </div>
-        </div>
+  <div class="row" style="justify-content: flex-end">
+    <div class="col-3">
+      <div class="alert alert-info">
+        <a href="{% url 'logauth:log' %}">Login</a>
+      </div>
     </div>
+  </div>
 </div>
 {% endif %}
-    <a class="btn btn-primary" href="{% url 'testApp:main' %}"><-</a>
-    <div class="container">
-    {% if user.is_authenticated %}
-        <h1 class="text-center">Наименование теста: {{user_test.test.name}}</h1>
-        <p>Ваши баллы:{{user_test.points}}/{{max_score}} ({{percentage}}%)</p>
-    {% else %}
-        <h1>Access Denied</h1>
-        <p>You must be logged in to take the test.</p>
-    {% endif %}
-    </div>
+<div class="container">
+  {% if user.is_authenticated %}
+  <h1 class="text-center">Наименование теста: {{user_test.test.name}}</h1>
+  <p>Ваши баллы:{{user_test.points}}/{{max_score}} ({{percentage}}%)</p>
+  {% else %}
+  <h1>Access Denied</h1>
+  <p>You must be logged in to take the test.</p>
+  {% endif %}
+</div>
 {% endblock %}
