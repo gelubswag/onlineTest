@@ -19,11 +19,15 @@ urlpatterns = [
     path('<int:subId>/delete/<int:testId>', deleteTest, name="deleteTest"),
     path('<int:subId>/change/<int:testId>', changeTest, name="changeTest"),
     path('<int:subId>/<int:testId>', detailsTest, name="detailsTest"),
+    path('<int:subId>/<int:testId>/run', run_test, name="RunTest"),
     
     
     path('<int:subId>/<int:testId>/<int:questId>', detailsQuest, name="detailsQuest"),
     path('<int:subId>/<int:testId>/<int:questId>/opts', changeOpts, name="changeOpts"),
     path('<int:subId>/<int:testId>/<int:questId>/change', changeQuest, name='changeQuest'),
+    path('<int:subId>/<int:testId>/<int:questId>/delete', deleteQuest, name='deleteQuest'),
+    path('<int:subId>/<int:testId>/add', addQuest, name='addQuestion'),
+
     
     path('finishTest/<int:testId>', finishTest, name='finishTest'),
     
