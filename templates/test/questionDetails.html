@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'testApp:userStat' %}">{{ user.username }}</a>
+                <a href="{% url 'logauth:logaut' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'logauth:log' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="margin-bottom: 40px;margin-top: 40px"> {{pageTitle}}
+                {% comment %} {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addTest' subject.id %}" style="font-weight: 900">+</a> {%endif%} {% endcomment %}
+                <hr>
+            </h2>
+            {%if user.is_staff%}
+            <div class="row">
+                <div class="col-12">
+                {% for i, quest in questions %}
+                    <a class="btn {% if quest.id != question.id%} btn-outline-primary {% else %} btn-success {% endif %}" href="{% url "testApp:detailsQuest" subject.id test.id quest.id %}" style="margin-bottom:10px"> {{ i|add:1}} </a>
+                {% endfor %}
+                {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addQuestion' subject.id test.id %}" style="font-weight: 900; margin-bottom:10px">+</a>{%endif%}
+                </div>
+            </div>
+            <hr>
+            {% else %}
+            <div class="row">
+                <div class="col-12">
+                {% for i, quest in user_questions %}
+                    <a class="btn {% if quest.id != question.id%} btn-outline-primary {% else %} btn-success {% endif %}" href="{% url "testApp:detailsQuest" subject.id test.id quest.id %}" style="margin-bottom:10px"> {{ i|add:1}} </a>
+                {% endfor %}
+                
+                </div>
+            </div>
+            <hr>
+            {%endif%}
+            <div class="row">
+                <div class="col-12 text-center">
+                    {% if user.is_staff %}
+                        {% if question.image %}
+                            <img src="{{ question.image.url }}" alt="question image" style="height: {{question.imageHeight}}px; width: {{question.imageWidth}}px;">
+                        {% endif %}
+                        {% if question.imageURL %}
+                            <img src="{{question.imageURL}}" alt="question image" style="height: {{question.imageHeight}}px; width: {{question.imageWidth}}px;">
+                        {% endif %}
+                        <form method="POST"  enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-success">Перейти к вариантам ответа</button>
+                            <a href="{% url 'testApp:deleteQuest' subject.id test.id question.id%}" class="btn btn-danger">Удалить вопрос</a>
+                        </form>
+                    {% else %}
+                    <div class='card carditem' style="margin: 0 auto; margin-top:10px; display:block; max-width: 80%; padding: 10px; box-sizing:content-box">
+                    {% if question.image %}
+                        <img src="{{ question.image.url }}" alt="question image" style="height: {{question.imageHeight}}; width: {{question.imageWidth}};">
+                    {% endif %}
+                    {% if question.imageURL %}
+                    <img src="{{question.imageURL}}" alt="question image" style="height: {{question.imageHeight}}; width: {{question.imageWidth}}">
+                    {% endif %}
+                    <p> {{ question.text }} </p>
+                    {%if right_num != 0%}
+                        <p> {%if right_num == 1 %} Выберите<strong> ОДИН </strong>вариант ответа:
+                            {% else %} Выберите<strong> НЕСКОЛЬКО </strong> вариантов ответа:
+                            {%endif%}
+                        </p>
+                    {%else%}
+                    <p>Выберите<strong> НЕСКОЛЬКО </strong> вариантов ответа:</p>
+                    {% endif %}
+                    {% if options|length == 0 %}
+                        <p> Нет вариантов ответа</p>
+                    {% endif %}
+                    </div>
+                    {% csrf_token %}
+                    <form method="POST" style="box-sizing:border-box" style="min-height: 20%">
+                        {% csrf_token %}
+                        {% for option in options %}
+                        <div class='card carditem' style="margin: 0 auto; margin-top:10px; display:block; max-width: 80%; padding: 10px; box-sizing:content-box">
+                            <input type="checkbox" name="isRight{{option.id}}" value="isRight{{option.id}}"  {%if option.id in user_ans_opts %} checked {%endif%}style="margin-top: 10px;">
+                            {%if option.image%}<img src="{{ option.image.url }}" alt="option image" style="margin-left:10px; height: {{option.imageHeight}}; width: {{option.imageWidth}};"> {%endif%}
+                            {% if option.imageURL %}
+                                <img src="{{option.imageURL}}" alt="option image" style="margin-left:10px; height: {{option.imageHeight}}px; width: {{option.imageWidth}}px;">
+                            {% endif %}
+                            {{ option.text }} <br>
+                        </div>
+                        {% endfor %}
+                    {% if not is_first%}
+                        <button type="submit" name="prev" class="btn btn-primary" style="margin-top:10px">Предыдущий вопрос</button>
+                        {%endif%}                    
+                    {% if not is_last%}
+                    <button type="submit" name="next" class="btn btn-success" style="margin-top:10px">Следующий вопрос</button>
+
+                    {%endif%}
+                    <button name="finish" type="submit" class="btn btn-danger" style="margin-top:10px"> Завершить тест</button>
+
+                </form>
+                    
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

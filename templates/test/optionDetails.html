@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href="{% url 'testApp:userStat' %}">{{ user.username }}</a>
+                <a href="{% url 'logauth:logaut' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'logauth:log' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="margin-bottom: 40px;margin-top: 40px"> {{pageTitle}}
+                <hr>
+            </h2>
+            <div class="row">
+                <div class="col-12">
+                {% for i, quest in questions %}
+                <a class="btn {% if quest.id != question.id%} btn-outline-primary {% else %} btn-success {% endif %}" href="{% url "testApp:detailsQuest" subject.id test.id quest.id %}" style="margin-bottom:10px"> {{ i|add:1}} </a>
+                {% endfor %}
+                {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addQuestion' subject.id test.id %}" style="font-weight: 900; margin-bottom:10px">+</a>{%endif%}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if user.is_staff %}
+        <form method="POST" enctype="multipart/form-data" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+        {% csrf_token %}
+        {% for opt in optinstnace %}
+            <div class="card text-center" style="padding: 10px; min-width: 60%; margin: 20px auto">
+                <label for="image{{opt.id}}"> Изображение </label>
+                
+                {% if opt.image %}
+                            <img src="{{ opt.image.url }}" alt="option image" style="width:{{opt.imageWidth}}px; height:{{opt.imageHeight}}px; margin: 10px auto">
+                {% endif %}
+                {% if opt.imageURL %}
+                    <img src="{{opt.imageURL}}" alt="option image" style="width:{{opt.imageWidth}}px; height:{{opt.imageHeight}}px; margin: 10px auto">
+                {% endif %}
+                <input type="file" name="image{{opt.id}}" accept="image/*" id="id_image{{opt.id}}" {% if opt.image %} value="media{{opt.image.url}}" {% endif %}>
+                <hr>
+                <input type="text" name="imageURL{{opt.id}}" id="id_imageURL{{opt.id}}" value="{{opt.imageURL}}" placeholder="Ссылка на изображение">
+                <hr>
+                <label for="text{{opt.id}}"> Текст варианта ответа </label>
+                <input type="text" name="text{{opt.id}}" id="id_text{{opt.id}}" value="{{opt.text}}">
+                <hr>
+                <label for="isRight{{opt.id}}"> Является верным? </label>
+                <input type="checkbox" name="isRight{{opt.id}}" id="id_isRight{{opt.id}}" {% if opt.isRight %} checked {% endif %}>
+                <hr>
+                <label for="imageHeight{{opt.id}}"> Высота изображения в пикселях </label>
+                <input type="number" step="1" name="imageHeight{{opt.id}}" id="imageHeight{{opt.id}}" value="{{opt.imageHeight}}">
+                <hr>
+                <label for="imageWidth{{opt.id}}"> Ширина изображения в пикселях </label>
+                <input type="number" step="1" name="imageWidth{{opt.id}}" id="imageWidth{{opt.id}}" value="{{opt.imageWidth}}">
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary text-center" style="margin: 10px auto;" align="center">Сохранить</button>
+        <a href="{% url 'testApp:detailsQuest' subject.id test.id question.id %}" class="btn btn-success text-center" style="margin: 10px auto;" align="center">Вернуться к вопросам</a>
+    </form>
+        
+    {% endif %}
+</div>
+{% endblock %}

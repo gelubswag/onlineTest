@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'testApp:userStat' %}">{{ user.username }}</a>
+                <a href="{% url 'logauth:logaut' %}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="row" style="justify-content:flex-end">
+        <div class="col-3">
+            <div class="alert alert-info" >
+                <a href ="{% url 'logauth:log' %}">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 style="margin-bottom: 40px;margin-top: 40px"> {{pageTitle}}
+                <hr>
+            </h2>
+            {% if user.is_staff%}
+            <div class="row">
+                <div class="col-12">
+                {% for i, quest in questions %}
+                    <a class="btn btn-outline-primary" href="{% url "testApp:detailsQuest" subject.id test.id quest.id %}" style="margin-bottom:10px"> {{ i|add:1}} </a>
+                {% endfor %}
+                    {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addQuestion' subject.id test.id %}" style="font-weight: 900; margin-bottom:10px">+</a>{%endif%}
+
+            {%endif%}
+            </div>
+            {% comment %} {% if subjects %}
+                <h2 style="margin-bottom: 40px;"> {{ pageTitle}} 
+                    {% if user.is_staff %}<a class="btn btn-success" href="{% url 'testApp:addSubject' %}" style="font-weight: 900">+</a> {%endif%} 
+                    <hr>
+                </h2>
+                {% for subject in subjects %}
+                    <a href="{{subject.name}}" class="btn btn-outline-primary" style="margin-right:20px; min-width: 200px; margin-bottom: 10px;"> {{subject.name}} </a>
+                {%endfor%}
+            {% endif %} {% endcomment %}
+        </div>
+    </div>
+</div>
+{% endblock %}

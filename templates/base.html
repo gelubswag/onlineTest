@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap.css' %}" />
+    <style>
+        textarea {
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <a class="btn btn-primary-outline"  href="{% url 'testApp:main'%}" style="display:inline;position:fixed">Home</a>
+    {% block content %}
+    {% endblock content %}
+</body>
+</html>
