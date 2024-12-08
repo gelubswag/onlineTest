@@ -134,7 +134,6 @@ def changeTest(request, subId, testId):
         subj = Subject.objects.filter(id=subId).all()[0]
         test = SubjTest.objects.filter(id=testId).all()[0]
         test.name = request.POST["name"]
-        test.questions_num = request.POST["questions_num"]
 
         test.save()
         return redirect("testApp:detailsSubject", subId=subId)
